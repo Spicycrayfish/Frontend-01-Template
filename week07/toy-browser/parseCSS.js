@@ -112,6 +112,6 @@ function compare(sp1, sp2) {
     return sp1[3] - sp2[3];
 }
 
-module.exports.computeCSS = computeCSS;
-
-module.exports.addCSSRules = addCSSRules;
+module.exports = {
+    computeCSS, addCSSRules
+}
