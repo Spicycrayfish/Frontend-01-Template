@@ -11,12 +11,12 @@ function match(ele, selector) {
     }
 
     if (selector.charAt(0) === '#') {
-        let attr = ele.attributes.filter(attr => attr.name === 'id'[0])
+        let attr = ele.attributes.filter(attr => attr.name === 'id')[0]
         if (attr && attr.value === selector.replace('#', '')) {
             return true;
         }
     } else if (selector.charAt(0) === '.') {
-        let attr = ele.attributes.filter(attr => attr.name === 'class'[0])
+        let attr = ele.attributes.filter(attr => attr.name === 'class')[0]
         if (attr && attr.value === selector.replace('.', '')) {
             return true;
         }
