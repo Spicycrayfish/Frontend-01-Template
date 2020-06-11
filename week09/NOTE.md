@@ -400,9 +400,52 @@ HTML的定义：XML 与 SGML
 
 
 
+#### 合法元素
+
+* Element
+* Text
+* Comment
+* DocumentType：`<!Doctype html>`
+* ProcessingInstruction：`<?a 1?>` 为预处理预留的，但基本不用
+* CDATA：`<![CDATA[]]>`
+
+
+
+#### 字符引用
+
+* `&#161;`
+
+* `&amp;`
+* `&lt;`
+* `&quot;`
+
+
+
+Node:
+
+* Element
+  * HTMLElement
+  * SVGElement
+* Document
+* CharacterData
+  * 文本
+  * 注释
+  * ProcessingInstruction
+* DocumentFragment
+* DocumentType
+
+
+
+操作DOM时，不需要先把它从DOM树上拿下来，比如二次插入时，它会先将DOM从树上摘下，再插入到相应位置。childNodes 是动态的，即使取出赋值给变量，只要操作修改了DOM树，childNodes 就会实时改变
 
 
 
 
 
+####高级操作
 
+* compareDocumentPosition
+* contains
+* isEqualNode
+* isSameNode  可以用 ===
+* cloneNode
