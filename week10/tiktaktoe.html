@@ -29,14 +29,15 @@
 
 <script>
     let pattern = [
-        [2, 0, 0],
-        [0, 1, 0],
+        [0, 0, 0],
+        [0, 0, 0],
         [0, 0, 0]
     ];
     let color = 1;
 
     function show() {
         let board = document.getElementById('board');
+        board.innerHTML = '';
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 let cell = document.createElement('div');
@@ -44,7 +45,7 @@
                 cell.innerHTML = pattern[i][j] == 2 
                     ? '❌' : pattern[i][j] == 1 
                     ? '⭕️' : '';
-                cell.addEventListener('click', () => move(j, i));
+                cell.addEventListener('click', () => move(i, j));
                 board.appendChild(cell);
             }
             board.appendChild(document.createElement('br'));
@@ -53,8 +54,8 @@
     
     // 点击落子
     function move(x, y) {
-        if (pattern[y][x]) return;
-        pattern[y][x] = color;
+        if (pattern[x][y]) return;
+        pattern[x][y] = color;
 
         if (check(pattern, color)) {
             alert(color === 2 ? '❌ is winner' : '⭕️ is winner');
@@ -68,6 +69,18 @@
         if (willWin(pattern, color)) {
             console.log(color === 2 ? '❌ will win' : '⭕️ will win');
         }
+    }
+
+    function computerMove() {
+        let choice = bestChoice(pattern, color);
+        if (choice.point) {
+            pattern[choice.point[1]][choice.point[0]] = color;
+        }
+        if (check(pattern, color)) {
+            alert(color === 2 ? '❌ is winner' : '⭕️ is winner');
+        }
+        color = 3 - color;
+        show();
     }
 
     function check(pattern, color) {
@@ -147,6 +160,9 @@
 
     // 最佳落子点
     function bestChoice(pattern, color) {
+        if (openings.has(pattern.toString())) {
+            return openings.get(pattern.toString());
+        }
         let point = null,
             result = -1;
         if (point = willWin(pattern, color)) {
@@ -161,8 +177,8 @@
                 let tmp = clone(pattern);
                 tmp[i][j] = color;
                 let oop = bestChoice(tmp, 3 - color);
-                if (-oop.result > result) {
-                    point = [i, j];
+                if (-oop.result >= result) {
+                    point = [j, i];
                     result = -oop.result;
                 }
             }
