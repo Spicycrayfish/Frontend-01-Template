@@ -449,3 +449,20 @@ Node:
 * isEqualNode
 * isSameNode  可以用 ===
 * cloneNode
+
+
+
+
+
+
+
+###重学DOM
+
+* DOM Tree
+* Events
+* Range
+
+
+
+
+
