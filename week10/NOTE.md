@@ -86,8 +86,6 @@ window.getComputedStyle(elt, pseudoElt);
 
 
 
-
-
 > 关于位置 要记住的API：
 >
 > getClientRects
@@ -106,6 +104,29 @@ window.getComputedStyle(elt, pseudoElt);
 
 
 
+### TicTacToe
 
 
-添加多个事件不会影响性能，触发多个事件才会影响性能
+
+> 性能好坏是测出来的，首先考虑性能是否重要，其次考虑性能是好是坏；绑定多个事件不会影响性能，触发多个事件才会影响性能。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
