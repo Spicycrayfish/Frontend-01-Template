@@ -1,0 +1,48 @@
+<script>
+  let regexp = /(0|[1-9][0-9]*)|([ ]+)|([\r\n]+)|(\+)|(\-)|(\*)|(\/)/g;
+
+  let dic = ['Number', 'WhiteSpace', 'LineTerminator', '+', '-', '*', '/']
+
+  function* tokenize(source) {
+    let result = null;
+    let lastIndex = 0;
+
+    do {
+      //起始点
+      lastIndex = regexp.lastIndex;
+      result = regexp.exec(source);
+      if (!result) break;
+
+      // 发现不在正则规则里的其他字符
+      if (regexp.lastIndex - lastIndex > result[0].length) {
+        throw new Error('upexpected token "' + source.slice(lastIndex, regexp.lastIndex - lastIndex - result[0].length) + '" !');
+      }
+
+      let token = {
+        type: null,
+        value: null
+      };
+
+      for (let i = 1; i <= dic.length; i++) {
+        if (result[i]) {
+          // console.log(dic[i - 1]);
+          token.type = (dic[i - 1]);
+        }
+      }
+
+      // console.log(result[0]);
+      token.value = result[0];
+
+      yield token;
+    } while (result);
+
+    yield { type: 'EOF' };
+  }
+
+  
+
+  for (let token of tokenize('1024 + 10 * 25')) {
+    console.log(token);
+  }
+
+</script>

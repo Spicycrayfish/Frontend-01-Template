@@ -12,6 +12,20 @@
 
 
 
+## range实现拖拽
+
+监听 `document` 的移动事件，并及时移除监听事件
+
+建议取拖拽事件的 `clientX` 和 `clientY` 这两个值
+
+
+
+`top`、`left` 会涉及 `layout`，性能消耗更高，所以可以使用 transform 的 translate 来移动目标
+
+
+
+
+
 ## 组件化基础
 
 前端架构主体： 
@@ -42,9 +56,7 @@
 
 
 
-> Attribute / Property / state /config 的区别
-
-
+####Attribute / Property / state /config 的区别
 
 Attribute 强调描述性； 
 
@@ -93,6 +105,9 @@ class MyComponent() {
   getAttribute(attr, value) {
     
   }
+  
+  get children() {}
+  set children() {}
 }
 
 
@@ -105,12 +120,72 @@ class MyComponent() {
 
 
 
-LifeCycle：
+####LifeCycle：
 
-> 组件的生命周期
+* created
 
-> 组件的 Children: 分为 Content 型 Children 和 Template 型 Children
+* mount   unmount
 
-> 组件的 event
+* JS change/set    user input
+* render / update
 
-> 组件的 methods
+* destroyed
+
+
+
+
+
+#### Children
+
+分为两种： 
+
+* Content 型 Children 
+
+```html
+<my-button><img src="{{icon}}" />{{title}}</my-button>
+```
+
+* Template 型 Children
+
+```html
+<my-list>
+  <li><img src="{{icon}}" />{{title}}</li>
+</my-list>
+```
+
+
+
+
+
+示例：轮播组件的设计
+
+``` 
+Carousel
+
+	state
+		activeIndex
+	
+	property
+		loop  time  imglist  autoplay  color
+	
+	attribute
+		startIndex  loop  time  imglist  autoplay  color
+	
+	children
+		CarouselView
+		
+	event
+		change  click  hover  swipe
+	
+	method
+		next()  prev()  goto()  
+		play()  stop()
+		
+	config
+		setInterval()
+		setTimeout()
+		requestAnimationFrame()
+		mode: 'useRAF', "useTimeout"
+```
+
+组件化的本质即是将上述内容设计清楚，组件化方案即是用代码承载上述内容
