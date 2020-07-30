@@ -51,18 +51,50 @@ export class Carousel {
                 let lastElement = children[lastPosition];
                 let currentElement = children[currentPosition];
                 let nextElement = children[nextPosition];
-
-                let currentTransformValue = - 570 * currentPosition + offset;
-                let lastTransformValue = - 570 - 570 * lastPosition + offset;
-                let nextTransformValue = 570 - 570 * nextPosition + offset;
-
                 let dx = event.clientX - event.startX;
-                lastElement.style.transform = `translateX(${lastTransformValue + dx}px)`;
-                currentElement.style.transform = `translateX(${currentTransformValue + dx}px)`;
-                nextElement.style.transform = `translateX(${nextTransformValue + dx}px)`;
+
+                let currentTransformValue = - 570 * currentPosition + offset + dx;
+                let lastTransformValue = - 570 - 570 * lastPosition + offset + dx;
+                let nextTransformValue = 570 - 570 * nextPosition + offset + dx;
+
+                lastElement.style.transform = `translateX(${lastTransformValue}px)`;
+                currentElement.style.transform = `translateX(${currentTransformValue}px)`;
+                nextElement.style.transform = `translateX(${nextTransformValue}px)`;
             }
 
-            let ele = <img src={url} onStart={onStart} onPan={onPan} enableGesture={true} />;
+            let onPanend = event => {
+                let direction = 0;
+                let dx = event.clientX - event.startX;
+                
+                if (dx + offset > 285) {
+                    direction = 1;
+                } else if (dx + offset < -285) {
+                    direction = -1;
+                }
+
+                timeline.reset();
+                timeline.start();
+
+                let lastElement = children[lastPosition];
+                let currentElement = children[currentPosition];
+                let nextElement = children[nextPosition];
+
+                let lastAnimation = new Animation(lastElement.style, 'transform', v => `translateX(${v}px)`,
+                     - 570 - 570 * lastPosition + offset + dx, - 570 - 570 * lastPosition + direction * 570, 1000, 0, ease);
+                let currentAnimation = new Animation(currentElement.style, 'transform', v => `translateX(${v}px)`,
+                     - 570 * currentPosition + offset + dx, - 570 * currentPosition + direction * 570, 1000, 0, ease);
+                let nextAnimation = new Animation(nextElement.style, 'transform', v => `translateX(${v}px)`,
+                     570 - 570 * nextPosition + offset + dx, 570 - 570 * nextPosition + direction * 570 , 1000, 0, ease);
+
+                timeline.add(lastAnimation);
+                timeline.add(currentAnimation);
+                timeline.add(nextAnimation);
+
+                position = (position - direction + this.data.length) % this.data.length;
+                nextPicStopHandler = setTimeout(nexPic, 3000);
+            }
+
+            let ele = <img src={url} onStart={onStart} onPan={onPan} onPanend={onPanend} enableGesture={true} />;
             ele.style.transform = 'translateX(0px)';
             ele.addEventListener('dragstart', e => e.preventDefault());
             return ele;
@@ -91,58 +123,6 @@ export class Carousel {
             nextPicStopHandler = setTimeout(nexPic, 3000);
         }
         nextPicStopHandler = setTimeout(nexPic, 3000);
-
-
-        // root.addEventListener("mousedown", event => {
-        //     let startX = event.clientX, startY = event.clientY;
-        //     let nextPosition = (position + 1) % this.data.length;
-        //     let lastPosition = (position - 1 + this.data.length) % this.data.length;
-
-        //     let current = children[position];
-        //     let next = children[nextPosition];
-        //     let last = children[lastPosition];
-
-        //     current.style.transition = 'ease 0s';
-        //     next.style.transition = 'ease 0s';
-        //     last.style.transition = 'ease 0s';
-
-        //     current.style.transform = `translateX(${- 570 * position}px)`;
-        //     next.style.transform = `translateX(${570 - 570 * nextPosition}px)`;
-        //     last.style.transform = `translateX(${- 570 - 570 * lastPosition}px)`;
-
-
-        //     let move = event => {
-        //         current.style.transform = `translateX(${event.clientX - startX - 570 * position}px)`;
-        //         next.style.transform = `translateX(${event.clientX - startX + 570 - 570 * nextPosition}px)`;
-        //         last.style.transform = `translateX(${event.clientX - startX - 570 - 570 * lastPosition}px)`;
-        //     };
-        //     let up = event => {
-        //         let offset = 0;
-
-        //         if (event.clientX - startX > 285) {
-        //             offset = 1;
-        //         } else if (event.clientX - startX < -285) {
-        //             offset = -1;
-        //         }
-
-        //         // 将 transition 打开
-        //         current.style.transition = '';
-        //         next.style.transition = '';
-        //         last.style.transition = '';
-
-        //         current.style.transform = `translateX(${(offset * 570) - 570 * position}px)`;
-        //         next.style.transform = `translateX(${(offset * 570) + 570 - 570 * nextPosition}px)`;
-        //         last.style.transform = `translateX(${(offset * 570) - 570 - 570 * lastPosition}px)`;
-
-
-        //         position = (position - offset + this.data.length) % this.data.length;
-
-        //         document.removeEventListener("mousemove", move);
-        //         document.removeEventListener("mouseup", up);
-        //     };
-        //     document.addEventListener("mousemove", move);
-        //     document.addEventListener("mouseup", up);
-        // })
 
         return root;
     }
